@@ -35,7 +35,7 @@ def clusterize(count_of_clusters: int, matrix: scipy.matrix):
     return model.predict(matrix)
 
 
-def build_clouds(model, count_of_clusters: int, messages):
+def build_clouds(model, count_of_clusters: int, messages, filepath: str):
     result_cloud = plt.figure(figsize=(40, 30))
     for num_of_cluster in range(count_of_clusters):
         text = ""
@@ -45,16 +45,12 @@ def build_clouds(model, count_of_clusters: int, messages):
                 print(cluster, "-", idx, "-", messages[idx])
                 text += messages[idx] + " "
         if len(text) > 0:
-            word_cloud = WordCloud(
-                background_color='white'
-            ).generate(text)
-            result_cloud.add_subplot(
-                math.ceil(count_of_clusters / 3),
-                3,
-                num_of_cluster + 1
-            )
+            word_cloud = WordCloud(background_color='white').generate(text)
+            width = math.ceil(math.sqrt(count_of_clusters))
+            height = round(math.sqrt(count_of_clusters))
+            result_cloud.add_subplot(height, width, num_of_cluster + 1)
             plt.axis('off')
             plt.imshow(word_cloud)
-    plt.savefig('images/tags_cloud.png')
+    plt.savefig(filepath)
     plt.show()
 
