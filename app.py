@@ -31,27 +31,29 @@ def prepare_messages(messages: list) -> list:
     return [' '.join(word for word in sentences) for sentences in processed]
 
 
-vectorizer = TfidfVectorizer()
-processed_messages = prepare_messages(messages1)
-X = vectorizer.fit_transform(processed_messages)
-k = len(processed_messages)
+def vectorize_messages(messages: list):
+    vectorizer = TfidfVectorizer()
+    return vectorizer.fit_transform(messages)
 
-print(X)
-model = KMeans(n_clusters=k, random_state=0, n_jobs=-2)
-model.fit(X)
-y = model.predict(X)
 
-text = ""
-for idx, cluster in enumerate(y):
-    print(cluster, processed_messages[idx])
-    text += processed_messages[idx] + " "
 
-print(text)
-
-word_cloud = WordCloud(background_color='white',
-                       width=1200,
-                       height=1000
-                       ).generate(text)
-plt.imshow(word_cloud)
-plt.axis('off')
-plt.show()
+#
+# print(X)
+# model = KMeans(n_clusters=k, random_state=0, n_jobs=-2)
+# model.fit(X)
+# y = model.predict(X)
+#
+# text = ""
+# for idx, cluster in enumerate(y):
+#     print(cluster, processed_messages[idx])
+#     text += processed_messages[idx] + " "
+#
+# print(text)
+#
+# word_cloud = WordCloud(background_color='white',
+#                        width=1200,
+#                        height=1000
+#                        ).generate(text)
+# plt.imshow(word_cloud)
+# plt.axis('off')
+# plt.show()
