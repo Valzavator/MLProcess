@@ -1,10 +1,16 @@
-from app import prepare_messages, vectorize_messages, clusterize, one_cloud
+from ML_process import prepare_messages, vectorize_messages, clusterize, build_clouds
 from database import Database
 
-if __name__ == "__main__":
+
+def main():
     db = Database()
-    num_clusters = 2
+    count_of_clusters = 9
     prepared_messages = prepare_messages(db.get_text_from_messages())
-    matrix1 = vectorize_messages(prepared_messages)
-    model1 = clusterize(num_clusters, matrix1)
-    one_cloud(model1, prepared_messages)
+    matrix = vectorize_messages(prepared_messages)
+    model = clusterize(count_of_clusters, matrix)
+    build_clouds(model, count_of_clusters, prepared_messages)
+
+
+if __name__ == "__main__":
+    main()
+
