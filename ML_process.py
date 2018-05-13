@@ -1,25 +1,25 @@
 import math
-
+import matplotlib.pyplot as plt
 import nltk
 import scipy
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cluster import KMeans
-from wordcloud import WordCloud
 from nltk.corpus import stopwords
-import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import TfidfVectorizer
+from textblob import Word
+from wordcloud import WordCloud
 
 nltk.download('stopwords')
 
 
 def prepare_messages(messages: list) -> list:
-    lemmatizer = nltk.WordNetLemmatizer()
     processed = []
     for message in messages:
         words = word_tokenize(str.lower(message))
-        tokens = [lemmatizer.lemmatize(word) for word in words
+        tokens = [Word(word).lemmatize("v") for word in words
                   if word.isalpha() and word not in stopwords.words("english")]
         if len(tokens) > 0:
+            print(tokens)
             processed.append(tokens)
     return [' '.join(word for word in sentences) for sentences in processed]
 
@@ -39,16 +39,14 @@ def build_clouds(model, count_of_clusters: int, messages):
     result_cloud = plt.figure(figsize=(40, 30))
     for num_of_cluster in range(count_of_clusters):
         text = ""
-        print("\n<<< " + str(num_of_cluster) + " cluster >>>\n")
+        print("\nCLUSTER: " + str(num_of_cluster) + "\n")
         for idx, cluster in enumerate(model):
             if num_of_cluster == cluster:
-                print(cluster, idx, messages[idx])
+                print(cluster, "-", idx, "-", messages[idx])
                 text += messages[idx] + " "
         if len(text) > 0:
             word_cloud = WordCloud(
-                background_color='white',
-                width=1200,
-                height=1000
+                background_color='white'
             ).generate(text)
             result_cloud.add_subplot(
                 math.ceil(count_of_clusters / 3),
@@ -57,6 +55,6 @@ def build_clouds(model, count_of_clusters: int, messages):
             )
             plt.axis('off')
             plt.imshow(word_cloud)
-
-    plt.show(block=True)
+    plt.savefig('images/tags_cloud.png')
+    plt.show()
 
