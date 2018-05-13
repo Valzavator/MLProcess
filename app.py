@@ -3,24 +3,12 @@ import scipy
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from wordcloud import WordCloud
-from database import Database
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 
 nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
 
-db = Database()
-messages1 = ["This is  will very, ,,,will ,,,123 ...strange",
-             "This is  will very is is is is is is nice cs",
-             "My name is ,is is is, is is is is is is is cs nice",
-             "My name will is cs will  Vadim and ,I`d like to play dota go",
-             "This is will very pretty doing do reading girl cs"]
-
-
-# messages1 = db.get_text_from_messages()
 
 def prepare_messages(messages: list) -> list:
     lemmatizer = nltk.WordNetLemmatizer()
@@ -50,22 +38,20 @@ def one_cloud(model, messages):
     for idx, cluster in enumerate(model):
         print(cluster, messages[idx])
         text += messages[idx] + " "
-
-    print(text)
-
     word_cloud = WordCloud(background_color='white',
                            width=1200,
                            height=1000
                            ).generate(text)
+    # plt.imshow(word_cloud)
+    # plt.axis('off')
+    # plt.show()
+
+    f = plt.figure()
+    f.add_subplot(1, 2, 1)
+    plt.axis('off')
+    plt.imshow(word_cloud)
+    f.add_subplot(1, 2, 2)
     plt.imshow(word_cloud)
     plt.axis('off')
-    plt.show()
-
-
-num_clusters = 2
-prepared_messages = prepare_messages(messages1)
-matrix = vectorize_messages(prepared_messages)
-model = clusterize(num_clusters, matrix)
-one_cloud(model, prepared_messages)
-
+    plt.show(block=True)
 
